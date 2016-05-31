@@ -1,0 +1,15 @@
+@AbapCatalog.sqlViewName: 'DEMO_CDS_PARA' 
+define view demo_cds_parameters 
+  with parameters p_distance_l:S_DISTANCE,
+                  p_distance_o:S_DISTANCE,
+                  p_unit:S_DISTID 
+  as select from spfli          
+            { key carrid,
+              key connid,
+                  cityfrom,
+                  cityto,
+                  distance,
+                  distid }
+            where distid = :p_unit and
+                           distance between :p_distance_l
+                                        and :p_distance_o; 
