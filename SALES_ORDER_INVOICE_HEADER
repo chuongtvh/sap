@@ -1,0 +1,21 @@
+@AbapCatalog.sqlViewName: 'SALESO_INVHDR_VW' 
+define view sales_order_invoice_header as 
+  select from snwd_so_inv_head 
+           inner join snwd_so 
+             on snwd_so_inv_head.so_guid = snwd_so.node_key 
+         association [1..1] to snwd_bpa as buyer 
+           on $projection.buyer_guid = buyer.node_key 
+         association [1..*] to snwd_so_inv_item as invoice_items 
+           on $projection.node_key = invoice_items.parent_key 
+         { key snwd_so_inv_head.node_key,      //used in assoc invoice_items 
+               snwd_so_inv_head.buyer_guid,    //used in assoc buyer 
+               snwd_so.so_id as sales_order_id, 
+               buyer.bp_id as buyer_id,        //from assoc buyer 
+               snwd_so_inv_head.payment_status, 
+              @Semantics.currencyCode 
+               snwd_so_inv_head.currency_code, 
+              @Semantics.amount.currencyCode: 'currency_code' 
+               snwd_so_inv_head.gross_amount, 
+               invoice_items                   //publish assoc invoice_items 
+         } 
+          where buyer.bp_role = '001';          //usage of assoc buyer 
