@@ -1,0 +1,8 @@
+@AbapCatalog.sqlViewName: 'DEMO_CDS_PRJCTN' 
+define view demo_cds_spfli 
+  as select from spfli 
+     { key spfli.mandt, 
+       key spfli.carrid, 
+       key spfli.connid, 
+       spfli.cityfrom,  
+       spfli.cityto }
