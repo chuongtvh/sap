@@ -19,3 +19,14 @@ define view sales_order_invoice_header as
                invoice_items                   //publish assoc invoice_items 
          } 
           where buyer.bp_role = '001';          //usage of assoc buyer 
+
+
+@AbapCatalog.sqlViewName: 'SALESO_INVITM_VW' 
+define view sales_order_invoice_items as 
+  select from sales_order_invoice_header as header 
+  { header.sales_order_id, 
+    header.invoice_items.inv_item_pos as item_position, 
+   @Semantics.currencyCode 
+    header.invoice_items.currency_code, 
+   @Semantics.amount.currencyCode: 'currency_code' 
+    header.invoice_items.gross_amount }
